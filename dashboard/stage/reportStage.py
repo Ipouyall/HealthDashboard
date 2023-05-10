@@ -1,8 +1,10 @@
 import streamlit as st
 
-from . import Stage, logger, UserInput
-from dashboard.model import Report, BaseModel
-from dashboard.utils.history import add_to_json_file
+from . import logger
+from dashboard.types import *
+from dashboard.utils.history import *
+from .storage import StageStorage, ObjectType
+from dashboard.model import BaseModel
 
 
 class ReportStage(Stage):
@@ -22,42 +24,34 @@ class ReportStage(Stage):
         assert self.model is not None or self.model_initializer is not None, \
                "you should specify model_initializer or model"
 
-        self.session_data: list[UserInput] = []
-        self.reports: list[Report] = []
-        self.last_processed = 0
+        self.storage = StageStorage()
+
         logger.info("ReportStage initialized")
 
-
     def analyze(self):
-        new_entry = self.session_data[self.last_processed:]
-        if len(new_entry) == 0:
-            return
-        self.last_processed = len(self.session_data)
-
-        if self.model is None:
-            self.model = self.model_initializer()
+        new_entry = self.storage.get_new_data(ObjectType.userInput)
 
         for entry in new_entry:
+            if self.model is None:
+                self.model = self.model_initializer()
+
             result = self.model.predict(**entry())
             report = Report(overall_status=result["label"], score=result["score"])
-            self.reports.append(report)
+            self.storage.add_record(report)
 
     def activate(self) -> None:
         self.analyze()
 
-        for entry, report in zip(self.session_data, self.reports):
-            entry_text = str(entry)
-            report_text = str(report)
-            st.text(f"{(entry_text if len(entry_text) < 50 else entry_text[:50]+'...')+' ':-<50}--> {report_text}")
+        itr = zip(
+            self.storage.get_preview(ObjectType.userInput),
+            self.storage.get_preview(ObjectType.report)
+        )
+        for entry_text, report_text in itr:
+            st.text(f"{entry_text + ' ':-<70}--> {report_text}")
 
     def __call__(self, *args, **kwargs):
-        if "session_data" in kwargs:
-            for entity in kwargs["session_data"]:
-                self.session_data.append(entity)
+        pass
 
     def dump(self):
-        j_data = (entity() for entity in self.reports)
+        j_data = (entity() for entity in self.storage.get_session_data(ObjectType.report))
         add_to_json_file(self.LOG_FILE, *j_data)
-
-
-# TODO: add some functionality to be able to add new data of a session uniquely and process them once

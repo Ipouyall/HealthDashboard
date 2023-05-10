@@ -1,7 +1,9 @@
 import streamlit as st
 
-from . import Stage, logger, UserInput
-from dashboard.utils.history import add_to_json_file
+from . import logger
+from dashboard.types import *
+from dashboard.utils.history import *
+from .storage import StageStorage, ObjectType
 
 
 class InputStage(Stage):
@@ -10,19 +12,16 @@ class InputStage(Stage):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.session_inputs: list[UserInput] = []
-        self.last_returned_idx = 0
-        self.return_till = 0
+        self.storage = StageStorage()
+
+        history = get_json_file_data(self.LOG_FILE)
+        prev_inputs = [UserInput(**entity) for entity in history]
+        self.storage.restore(prev_inputs)
+
         logger.info("InputStage initialized")
 
-    def get_session_data(self):
-        idx = self.last_returned_idx
-        self.last_returned_idx = self.return_till
-        return self.session_inputs[idx: self.return_till]
-
     def __call__(self, *args, **kwargs):
-        if "request session data":
-            return self.get_session_data()
+        pass
 
     def activate(self) -> None:
         cols = st.columns(2)
@@ -33,20 +32,18 @@ class InputStage(Stage):
         add = cols2[0].button("Add")
         analyze = cols2[1].button("Analyze")
 
-        cols[1].text("This session's inputs:")
-        for entity in self.session_inputs:
-            text = str(entity)
-            cols[1].text(text)
+        cols[1].text("Your inputs:")
+        for preview in self.storage.get_preview(ObjectType.userInput):
+            cols[1].text(preview)
 
-        if add and len(txt.strip()) > 0 and txt not in self.session_inputs:
+        if add and len(txt.strip()) > 0 and not self.storage.entity_exists(txt):
             data = UserInput(text=txt)
-            self.session_inputs.append(data)
+            self.storage.add_record(data)
             st.experimental_rerun()
 
         if analyze:
-            self.return_till = len(self.session_inputs)
             st.experimental_rerun()
 
     def dump(self):
-        j_data = (entity() for entity in self.session_inputs)
+        j_data = (entity() for entity in self.storage.get_session_data(ObjectType.userInput))
         add_to_json_file(self.LOG_FILE, *j_data)

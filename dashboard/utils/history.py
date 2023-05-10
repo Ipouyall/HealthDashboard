@@ -12,7 +12,7 @@ def add_to_json_file(filepath: str, *j_data: dict):
         for data in j_data:
             file_content.append(data)
         f.seek(0)
-        json.dump(file_content, f, indent=4)
+        json.dump(file_content, f, indent=4, default=str)
         f.truncate()
 
 

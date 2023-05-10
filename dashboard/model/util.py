@@ -4,7 +4,6 @@ from .basicAnalyzer import BasicEmotionDetector
 
 
 def get_model(name: str = "basic"):
-    print(os.system("pwd"))
     if name.lower() == "basic":
         model_path = os.path.join(".", "dashboard", "model", "baseAnalyzer", "model.h5")
         tokenizer_path = os.path.join(".", "dashboard", "model", "baseAnalyzer", "tokenizer.pkl")

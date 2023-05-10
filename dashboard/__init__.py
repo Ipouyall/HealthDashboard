@@ -1,7 +1,7 @@
 import streamlit as st
 import logging
 
-from .stage import Stage
+from .types import Stage
 from .stage.inputStage import InputStage
 from .stage.reportStage import ReportStage
 from dashboard.model.util import get_model_initializer
@@ -29,9 +29,9 @@ class Dashboard:
         st.title(self.__name)
 
     def run(self):
-        print("run called")
         active_tabs = st.tabs(self.tabs_title)
 
+        # TODO: Fix this messy codes
         data = self.__panels["Insert text"]("request session data")
         if data:
             self.__panels["Report"](session_data=data)
@@ -46,5 +46,3 @@ class Dashboard:
         for panel in self.__panels:
             if self.__panels[panel] is not None:
                 self.__panels[panel].dump()
-
-# TODO: should pass data from InputStage to ReportStage
