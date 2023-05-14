@@ -43,9 +43,11 @@ class StageStorage(metaclass=Singleton):
 
     def add_record(self, record: Union[UserInput, Report]):
         if isinstance(record, UserInput):
-            self.userInputs.append(record)
+            if record not in self.userInputs:
+                self.userInputs.append(record)
         elif isinstance(record, Report):
-            self.reports.append(record)
+            if record not in self.reports:
+                self.reports.append(record)
         else:
             raise Exception("Unknown type")
 

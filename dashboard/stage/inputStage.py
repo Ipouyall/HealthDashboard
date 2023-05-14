@@ -4,10 +4,11 @@ from . import logger
 from dashboard.types import *
 from dashboard.utils.history import *
 from .storage import StageStorage, ObjectType
+from dashboard import config
 
 
 class InputStage(Stage):
-    LOG_FILE = "logs/UserInputs.json"
+    LOG_FILE = config.USER_INPUT_DUMP_FILE
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -31,7 +32,6 @@ class InputStage(Stage):
         cols2 = cols[0].columns(2)
 
         add = cols2[0].button("Add")
-        analyze = cols2[1].button("Analyze")
 
         cols[1].text("Your inputs:")
         for preview in self.storage.get_preview(ObjectType.userInput):
@@ -40,9 +40,6 @@ class InputStage(Stage):
         if add and len(txt.strip()) > 0 and not self.storage.entity_exists(txt):
             data = UserInput(text=txt)
             self.storage.add_record(data)
-            st.experimental_rerun()
-
-        if analyze:
             st.experimental_rerun()
 
     def dump(self):
