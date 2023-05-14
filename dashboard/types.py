@@ -1,4 +1,3 @@
-import typing
 from itertools import count
 from dataclasses import dataclass, field
 from datetime import datetime
