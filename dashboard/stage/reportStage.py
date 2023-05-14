@@ -36,7 +36,7 @@ class ReportStage(Stage):
                 self.model = self.model_initializer()
 
             result = self.model.predict(**entry())
-            report = Report(overall_status=result["label"], score=result["score"])
+            report = Report(overall_status=result["label"], score=result["score"], text_id=entry.id)
             self.storage.add_record(report)
 
     def activate(self) -> None:

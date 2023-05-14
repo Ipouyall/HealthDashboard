@@ -99,5 +99,10 @@ class StageStorage(metaclass=Singleton):
         for entity in dataset:
             yield entity
 
+    def get_data(self, ot: ObjectType) -> Iterable[Union[UserInput, Report]]:
+        dataset = self.__get_dataset(ot)
+
+        for entity in dataset:
+            yield entity
 
 

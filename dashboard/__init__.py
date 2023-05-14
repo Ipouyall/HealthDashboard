@@ -4,6 +4,7 @@ import logging
 from .types import Stage
 from .stage.inputStage import InputStage
 from .stage.reportStage import ReportStage
+from .stage.analysisStage import AnalysisStage
 from dashboard.model.util import get_model_initializer
 
 
@@ -16,7 +17,7 @@ class Dashboard:
         "Insert text": InputStage(),  # just inserting input
         "Report": ReportStage(model_initializer=get_model_initializer('basic')),
                   # get report with respect to input from user's new input(s)
-        "Analysis": None,     # accumulated report from user's previous inputs
+        "Analysis": AnalysisStage(),     # accumulated report from user's previous inputs
         "Feedback": None,     # for specialists and give them more power and to teach model
     }
 

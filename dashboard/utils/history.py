@@ -10,7 +10,8 @@ def add_to_json_file(filepath: str, *j_data: dict):
     with open(filepath, 'r+') as f:
         file_content = json.load(f)
         for data in j_data:
-            file_content.append(data)
+            if data not in file_content:
+                file_content.append(data)
         f.seek(0)
         json.dump(file_content, f, indent=4, default=str)
         f.truncate()

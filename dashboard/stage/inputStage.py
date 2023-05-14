@@ -25,6 +25,7 @@ class InputStage(Stage):
 
     def activate(self) -> None:
         cols = st.columns(2)
+
         txt = cols[0].text_input("Text input:")  # also test st.test_area
 
         cols2 = cols[0].columns(2)
