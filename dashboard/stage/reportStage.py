@@ -16,12 +16,14 @@ class ReportStage(Stage):
         super().__init__(*args, **kwargs)
 
         self.model: BaseModel = get_model(config.DEPRESSION_MODEL)
+        self.moodModel: BaseModel = get_model(config.MOOD_MODEL)
 
         self.storage = StageStorage()
 
         logger.info("ReportStage initialized")
 
     def analyze(self, analyze, re_analyze):
+        logger.info("Analyze called")
         if analyze:
             entries = self.storage.get_new_data(ObjectType.userInput)
         elif re_analyze:
@@ -62,11 +64,21 @@ class ReportStage(Stage):
             status = rep.overall_status.title()
             if status == "Positive":
                 score = int((rep.score-0.5)*200)
+                cols[2].markdown(f":green[{status} ({score}%)]")
             elif status == "Negative":
                 score = int((0.5-rep.score)*200)
+                cols[2].markdown(f":red[{status} ({score}%)]")
             else:
                 score = 0
-            cols[2].progress(score, f"{status} ({score}%)")
+                cols[2].markdown(f"{status} ({score}%)")
+
+            if score != 0:
+                cols[2].progress(score)
+
+            mood = cols[4].button("Mood", key=inp.id)
+            if mood:
+                result = self.moodModel.predict(**inp())
+                print(result)
 
             st.divider()
 

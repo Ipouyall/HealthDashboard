@@ -2,11 +2,8 @@ import streamlit as st
 
 from . import logger
 from dashboard.types import *
-from dashboard.utils.history import *
 from .storage import StageStorage, ObjectType
-import matplotlib.pyplot as plt
 import pandas as pd
-from sklearn.linear_model import LinearRegression
 
 
 class AnalysisStage(Stage):

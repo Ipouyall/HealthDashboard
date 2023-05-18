@@ -17,5 +17,6 @@ st.title(__app_name__)
 if "app" not in st.session_state:
     st.session_state.app = Dashboard()
     atexit.register(st.session_state.app.dump)
+    # st.experimental_rerun()
 
 st.session_state.app.run()
