@@ -2,7 +2,7 @@ import streamlit as st
 
 from . import logger
 from dashboard.types import *
-from .storage import StageStorage, ObjectType
+from dashboard.storage.storage import StageStorage, ObjectType
 import pandas as pd
 
 

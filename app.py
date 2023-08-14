@@ -9,7 +9,7 @@ __contact__ = "https://github.com/ipouyall"
 __copyright__ = "Copyright 2023,"
 __deprecated__ = False
 __license__ = "None"
-__app_name__ = "Online Dashboard"
+__app_name__ = "CoPsyLit"
 
 st.set_page_config(page_title=__app_name__, layout="wide")
 st.title(__app_name__)

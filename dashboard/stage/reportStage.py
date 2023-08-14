@@ -3,7 +3,7 @@ import streamlit as st
 from . import logger
 from dashboard.types import *
 from dashboard.utils.history import *
-from .storage import StageStorage, ObjectType
+from dashboard.storage.storage import StageStorage, ObjectType
 from dashboard.model.util import get_model
 from dashboard.model import BaseModel
 from dashboard import config
@@ -78,6 +78,7 @@ class ReportStage(Stage):
             mood = cols[4].button("Mood", key=inp.id)
             if mood:
                 result = self.moodModel.predict(**inp())
+                st.dataframe(result)
                 print(result)
 
             st.divider()
