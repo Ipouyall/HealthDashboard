@@ -1,7 +1,7 @@
 import streamlit as st
 import logging
 
-from dashboard.panel.conversation import Conversation
+from dashboard.panel.user.conversation import Conversation
 
 # from .types import Stage
 # from .stage.inputStage import InputStage

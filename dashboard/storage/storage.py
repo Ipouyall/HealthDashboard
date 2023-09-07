@@ -49,6 +49,7 @@ class StageStorage(metaclass=Singleton):  # TODO: connect to a database
                         role=Role.Specialist,
                         content="sound good!"),
                     ],
+                ended=True,
             ),
         ]
 

@@ -57,7 +57,9 @@ class InputStage(Stage):
              'aliquam',
              ('neque.', 'Sad'),
              ('Mauris', 'Happy'),
-             ('pellentesque', 'Happy'),    'elit',    ('nec', 'Angry'),    'risus',    ('varius,', 'Sad'),    'ut',    ('interdum', 'Happy'),    'ipsum',    ('vestibulum.', 'Sad'),    'Sed',    ('vitae', 'Happy'),    'augue',    ('vel', 'Angry'),    'odio',    ('consectetur', 'Happy'),    'aliquet.',    ('Donec', 'Angry'),    'eget',    ('turpis', 'Happy'),    'mauris.',    ('Vivamus', 'Happy'),    'condimentum',    ('dolor', 'Happy'),    'quis',    ('urna', 'Happy'),    'rhoncus,',    ('vel', 'Happy'),    'egestas',    ('neque', 'Sad'),    'laoreet.'),
+             ('pellentesque', 'Happy'),
+              'elit',
+             ('nec', 'Angry'), 'risus', ('varius,', 'Sad'),    'ut',    ('interdum', 'Happy'),    'ipsum',    ('vestibulum.', 'Sad'),    'Sed',    ('vitae', 'Happy'),    'augue',    ('vel', 'Angry'),    'odio',    ('consectetur', 'Happy'),    'aliquet.',    ('Donec', 'Angry'),    'eget',    ('turpis', 'Happy'),    'mauris.',    ('Vivamus', 'Happy'),    'condimentum',    ('dolor', 'Happy'),    'quis',    ('urna', 'Happy'),    'rhoncus,',    ('vel', 'Happy'),    'egestas',    ('neque', 'Sad'),    'laoreet.'),
             unsafe_allow_html=True,
         )
 
