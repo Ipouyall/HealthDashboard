@@ -20,33 +20,33 @@ def emotion_gauge(text, model: MoodModel, ph):
                     "clip": False,
                     "itemStyle": {"borderWidth": 1, "borderColor": "#464646"},
                 },
-                "axisLine": {"lineStyle": {"width": 40}},
+                "axisLine": {"lineStyle": {"width": 15}},
                 "splitLine": {"show": False, "distance": 0, "length": 10},
                 "axisTick": {"show": False},
                 "axisLabel": {"show": False, "distance": 50},
                 "data": [
                     {
-                        "value": vs.angry,
+                        "value": round(vs.angry, 2),
                         "name": "Anger",
-                        "title": {"offsetCenter": ["0%", "-30%"]},
-                        "detail": {"offsetCenter": ["0%", "-20%"]},
+                        "title": {"offsetCenter": ["0%", "-55%"]},
+                        "detail": {"offsetCenter": ["0%", "-35%"]},
                     },
                     {
-                        "value": vs.happy,
+                        "value": round(vs.happy, 2),
                         "name": "Happiness",
-                        "title": {"offsetCenter": ["0%", "0%"]},
-                        "detail": {"offsetCenter": ["0%", "10%"]},
+                        "title": {"offsetCenter": ["0%", "-15%"]},
+                        "detail": {"offsetCenter": ["0%", "5%"]},
                     },
                     {
-                        "value": vs.sad,
+                        "value": round(vs.sad, 2),
                         "name": "Sadness",
-                        "title": {"offsetCenter": ["0%", "30%"]},
-                        "detail": {"offsetCenter": ["0%", "40%"]},
+                        "title": {"offsetCenter": ["0%", "25%"]},
+                        "detail": {"offsetCenter": ["0%", "45%"]},
                     },
                 ],
                 "title": {"fontSize": 14},
                 "detail": {
-                    "width": 50,
+                    "width": 40,
                     "height": 14,
                     "fontSize": 14,
                     "color": "auto",
@@ -60,7 +60,5 @@ def emotion_gauge(text, model: MoodModel, ph):
     }
 
     with ph:
-        chart = st_echarts(option, height="500px", key="echarts")
-        st.write(chart)
-
-
+        st.markdown("<div style='text-align: center;'>Emotions Aggregated</div>", unsafe_allow_html=True)
+        st_echarts(option, height="300px", key="echarts")

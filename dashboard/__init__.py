@@ -1,7 +1,7 @@
 import streamlit as st
 import logging
 
-from dashboard.panel.user.conversation import Conversation
+from dashboard.panel.user.conversation import Session
 
 # from .types import Stage
 # from .stage.inputStage import InputStage
@@ -29,7 +29,7 @@ class Dashboard:
     #     }
     # }
     PANELS = [
-        Conversation()
+        Session()
     ]
 
     def __init__(self):

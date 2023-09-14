@@ -1,5 +1,6 @@
 import datetime
 from dashboard.storage.role import Role
+from dashboard.storage.report import Report
 from dataclasses import dataclass
 
 from typing import Union
@@ -43,7 +44,7 @@ class Conversation:
     id: int
     title: str
     messages: list[Message]
-    ended: bool = False
     analytic_note: str = ""
+    report: Union[None, Report] = None
 
 

@@ -1,5 +1,6 @@
 from dashboard.storage.role import *
 from dashboard.storage.conversation import *
+from dashboard.storage.report import *
 
 
 class Singleton(type):
@@ -49,7 +50,10 @@ class StageStorage(metaclass=Singleton):  # TODO: connect to a database
                         role=Role.Specialist,
                         content="sound good!"),
                     ],
-                ended=True,
+                report=Report(
+                    activeCharts=[ReportType.emoGauge, ReportType.msgSentiment],
+                    specialistsNote="This is a sample note from the specialist",
+                ),
             ),
         ]
 

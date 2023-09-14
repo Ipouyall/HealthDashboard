@@ -8,10 +8,12 @@ from streamlit_echarts import st_echarts, JsCode
 from dashboard.storage.role import Role
 from dashboard.storage.storage import StageStorage
 from dashboard.storage.conversation import Conversation, Message
+from dashboard.storage.report import Report, ReportType
 from dashboard.model.mood import MoodModel
+from dashboard.plots.gauge import emotion_gauge
 
 
-class Conversation:
+class Session:
     MAX_DELAY = 0.1
     SPECIAL_COMMANDS = ["emotion"]
 
@@ -87,11 +89,33 @@ class Conversation:
             st_echarts(option, height="500px", key="echarts")
 
     def analytics(self):
-        pass
+        if self.conversation is None:
+            return
+        if self.conversation.report is None:
+            return
+
+        report = self.conversation.report
+
+        row = st.columns(2 if len(report.activeCharts) > 1 else 1)
+        idx = 0
+        if ReportType.emoGauge in report.activeCharts:
+            emotion_gauge(
+                text=' .. '.join(msg.content for msg in self.conversation.messages if msg.role == Role.User),
+                model=self.mood,
+                ph=row[idx],
+            )
+
+        ### Place holder for seccond chart ###
+
+        if report.specialistsNote:
+            st.markdown("# Specialist's Note")
+
+            specialists_note = report.specialistsNote
+            st.markdown(specialists_note)
 
     def chat_page(self):
         command = ''
-        if self.conversation.ended:
+        if self.conversation is None or self.conversation.report is not None:
             pass
         elif prompt := st.chat_input("How you feel today?"):
             # Add user message to chat history
@@ -124,6 +148,9 @@ class Conversation:
             with st.chat_message('assistant'):
                 self.special(command)
 
+        if self.conversation.report is not None:
+            self.analytics()
+
     def activate(self):
         conv = st.sidebar.selectbox('Active Conversation/Session', self.conversations)
         if conv is not None and (self.conversation is None or self.conversation.id != conv[0]):
@@ -135,13 +162,4 @@ class Conversation:
 
         st.header(f"{self.conversation.title}")
 
-        option = st.sidebar.select_slider(
-            "Environment",
-            options=["Conversation", "Analytics"],
-        )
-
-        if option == "Conversation":
-            self.chat_page()
-        elif option == "Analytics":
-            self.analytics()
-
+        self.chat_page()
