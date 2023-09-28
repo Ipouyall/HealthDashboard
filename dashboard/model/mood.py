@@ -28,6 +28,15 @@ class Emotions:
         self.happy *= 100
         self.sad *= 100
 
+        self.scale_up()
+
+    def scale_up(self):
+        mx = sum([self.afraid, self.angry, self.happy, self.sad])
+        self.afraid = (self.afraid / mx) * 100
+        self.angry = (self.angry / mx) * 100
+        self.happy = (self.happy / mx) * 100
+        self.sad = (self.sad / mx) * 100
+
 
 class MoodModel(BaseModel):
     def __init__(self, lexicon_file="depecheMood/DepecheMood_english_token_full.tsv"):
@@ -63,11 +72,13 @@ class MoodModel(BaseModel):
         text = self.pre_process(text)
         ss = np.zeros((len(text), self.lexicon.shape[1]))
         result = pd.DataFrame(ss, columns=self.lexicon.columns, index=text)
+        rows_to_drop = []  # Create a list to store rows to drop
         for i, doc in tqdm(enumerate(text)):
             if doc not in self.lexicon.index:
-                result.drop([doc], inplace=True)
+                rows_to_drop.append(doc)  # Add rows to drop to the list
                 continue
             result.loc[[doc]] = self.lexicon.loc[[doc]]
+        result.drop(rows_to_drop, inplace=True)  # Drop the rows after the loop
         res_mean_emo = result.mean()
         emo = Emotions(
             afraid=res_mean_emo['AFRAID'],

@@ -2,6 +2,7 @@ import streamlit as st
 import logging
 
 from dashboard.panel.user.conversation import Session
+from dashboard.panel.login import Login
 
 # from .types import Stage
 # from .stage.inputStage import InputStage
@@ -29,22 +30,36 @@ class Dashboard:
     #     }
     # }
     PANELS = [
-        Session()
+        Session(),
     ]
 
     def __init__(self):
         self.panels = {panel.__class__.__name__: idx for idx, panel in enumerate(self.PANELS)}
-        logger.info(f"Dashboard initialized with {self.panels} modes")
-        self.state = None
+        logger.info(f"Dashboard initialized with {self.panels} panels")
+        self.current_user = Login.run()
 
     def run(self):
-        mode = st.sidebar.selectbox("Mode", (None,) + tuple(self.panels.keys()))
-        if mode is None:
+        print(self.current_user)
+        mode = ['specialist', 'specialist', None][0]
+        mode = self.current_user[0]
+
+        if mode == 'patient':
+            panel = self.PANELS[0]
+        elif mode == 'specialist':
+            panel = self.PANELS[0]
+        else:
+            # self.current_user = Login.run()
             return
 
-        idx = self.panels[mode]
-        panel = self.PANELS[idx]
+        st.sidebar.header(self.current_user[1])
+        st.sidebar.subheader(self.current_user[0].title())
         panel.activate()
+
+        logout_button = st.sidebar.button("Logout")
+        if logout_button:
+            self.current_user = (None, None)
+            st.success("Logout Successfully!")
+            st.experimental_rerun()
 
     def dump(self):
         pass

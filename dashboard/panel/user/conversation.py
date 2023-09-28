@@ -100,7 +100,7 @@ class Session:
         idx = 0
         if ReportType.emoGauge in report.activeCharts:
             emotion_gauge(
-                text=' .. '.join(msg.content for msg in self.conversation.messages if msg.role == Role.User),
+                text=' '.join(msg.content for msg in self.conversation.messages if msg.role == Role.User),
                 model=self.mood,
                 ph=row[idx],
             )
@@ -152,7 +152,7 @@ class Session:
             self.analytics()
 
     def activate(self):
-        conv = st.sidebar.selectbox('Active Conversation/Session', self.conversations)
+        conv = st.sidebar.selectbox('Active Session', self.conversations)
         if conv is not None and (self.conversation is None or self.conversation.id != conv[0]):
             self.conversation = self.storage.get_conversation(id=conv[0])
         elif conv is None:
