@@ -3,7 +3,7 @@ import streamlit as st
 
 class Login:
     user_credentials = {
-        "Pouya": "password123",
+        "Pouya": "1234",
         "user456": "password456",
     }
 
@@ -11,8 +11,10 @@ class Login:
         'Pouya': 'specialist',
     }
 
-    @staticmethod
-    def run():
+    def __init__(self):
+        self.username = None
+
+    def activate(self):
         """Return Role and Username"""
         print("Initiating Login Page...")
 
@@ -26,8 +28,15 @@ class Login:
         if row[0].button("Login"):
             if username in Login.user_credentials and Login.user_credentials[username] == password:
                 st.success("Login Successful!")
-                st.write("Welcome, " + username)
-                return Login.role[username], username.title()
+                self.username = username
+                st.experimental_rerun()
             else:
                 st.error("Invalid Username or Password")
-        return None, None
+
+    def get_user(self):
+        if self.username is None:
+            return None, None
+        return self.role[self.username], self.username.title()
+
+    def logout(self):
+        self.username = None
