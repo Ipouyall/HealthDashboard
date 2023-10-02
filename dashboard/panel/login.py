@@ -1,4 +1,5 @@
 import streamlit as st
+from dashboard.storage.role import Role
 
 
 class Login:
@@ -8,7 +9,7 @@ class Login:
     }
 
     role = {
-        'Pouya': 'specialist',
+        'Pouya': Role.User,
     }
 
     def __init__(self):

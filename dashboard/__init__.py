@@ -3,6 +3,7 @@ import logging
 
 from dashboard.panel.user.conversation import Session
 from dashboard.panel.login import Login
+from dashboard.storage.role import Role
 
 # from .types import Stage
 # from .stage.inputStage import InputStage
@@ -44,13 +45,13 @@ class Dashboard:
         self.current_user = self.PANELS[0].get_user()
 
         print(self.current_user)
-        mode = ['specialist', 'specialist', None][0]
         mode = self.current_user[0]
 
-        if mode == 'patient':
+        if mode == Role.User:
             panel = self.PANELS[1]
-        elif mode == 'specialist':
-            panel = self.PANELS[1]
+        elif mode == Role.Specialist:
+            print("Panel for specialist not implemented!!")
+            raise Exception()
         else:
             panel = self.PANELS[0]
 
