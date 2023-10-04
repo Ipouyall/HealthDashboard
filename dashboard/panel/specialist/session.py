@@ -15,6 +15,14 @@ from dashboard.plots.gauge import emotion_gauge
 from dashboard.plots.anotate import show_annotated
 
 
+annotation_sensitivity = {
+    "Off": None,
+    "Low": 0.5,
+    "Medium": 0.35,
+    "High": 0.2,
+}
+
+
 class Therapy:
     SPECIAL_COMMANDS = ["analyze"]
 
@@ -40,19 +48,50 @@ class Therapy:
 
         # TODO: Implement emotion changing
 
+    def show_chat(self, annotate_threshold=0.3):
+        """If annotate_threshold is None, then no annotation will be shown"""
+        if self.conversation is None:
+            return
+
+        command = ''
+        if prompt := st.chat_input("Type for conversation..."):
+            msg = Message(
+                id=len(self.conversation.messages),
+                role=Role.Specialist,
+                content=prompt
+            )
+
+            if prompt.lower() in self.SPECIAL_COMMANDS:
+                command = prompt.lower()
+            else:
+                self.conversation.messages.append(msg)
+
+        for idx in range(len(self.conversation.messages)):
+            msg = self.conversation.messages[idx]()
+            with st.chat_message(msg['role']):
+                st.markdown(msg['content'])
+
+        # if command:
+        #     with st.chat_message('assistant'):
+        #         self.special(command)
+
     def menu(self):
         if self.conversation is None:
             return
 
-        st.sidebar.markdown("### Analyzers")
+        st.sidebar.markdown("### Tools")
 
         active_reports = st.sidebar.multiselect(
             "Select analyzers",
             VALID_REPORTS.keys(),
         )
 
-        # TODO: show chan and annotation if needed
+        ann_ses = st.sidebar.select_slider(
+            "Annotation Sensitivity",
+            list(annotation_sensitivity.keys()),
+        )
 
+        self.show_chat(annotate_threshold=annotation_sensitivity[ann_ses])
         self.analytics(active_reports)
 
         # TODO: add a section for control the annotation threshold
@@ -67,6 +106,7 @@ class Therapy:
             self.conversation = None
             st.markdown("Please select a conversation to activate!")
             return
+        st.sidebar.divider()
 
         st.header(f"{self.conversation.title}")
 

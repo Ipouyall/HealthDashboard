@@ -61,7 +61,7 @@ class Dashboard:
             # st.sidebar.markdown(f"#### {self.current_user[0].title()}") # To show the Role
             # st.sidebar.markdown(f"#### {self.current_user[0].title()}: {self.current_user[1].title()}")
             st.sidebar.markdown(
-                f'### {self.current_user[1].title()}  <font size="1"> ({self.current_user[0].title()}) </font>',
+                f'### {self.current_user[1].title()}  <font size="1"> ({self.current_user[0].name.title()}) </font>',
                 unsafe_allow_html=True,
             )
 
