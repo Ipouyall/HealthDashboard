@@ -2,6 +2,7 @@ import streamlit as st
 import logging
 
 from dashboard.panel.user.conversation import Session
+from dashboard.panel.specialist.session import Therapy
 from dashboard.panel.login import Login
 from dashboard.storage.role import Role
 
@@ -33,6 +34,7 @@ class Dashboard:
     PANELS = [
         Login(),
         Session(),
+        Therapy(),
     ]
 
     def __init__(self):
@@ -50,17 +52,24 @@ class Dashboard:
         if mode == Role.User:
             panel = self.PANELS[1]
         elif mode == Role.Specialist:
-            print("Panel for specialist not implemented!!")
-            raise Exception()
+            panel = self.PANELS[2]
         else:
             panel = self.PANELS[0]
 
         if mode is not None:
-            st.sidebar.header(self.current_user[1])
-            st.sidebar.subheader(self.current_user[0].title())
+            # st.sidebar.markdown(f"### {self.current_user[1]}")
+            # st.sidebar.markdown(f"#### {self.current_user[0].title()}") # To show the Role
+            # st.sidebar.markdown(f"#### {self.current_user[0].title()}: {self.current_user[1].title()}")
+            st.sidebar.markdown(
+                f'### {self.current_user[1].title()}  <font size="1"> ({self.current_user[0].title()}) </font>',
+                unsafe_allow_html=True,
+            )
+
+        st.sidebar.divider()
         panel.activate()
 
         if self.current_user[0] is not None:
+            st.sidebar.divider()
             logout_button = st.sidebar.button("Logout")
             if logout_button:
                 self.current_user = (None, None)

@@ -5,11 +5,12 @@ from dashboard.storage.role import Role
 class Login:
     user_credentials = {
         "Pouya": "1234",
-        "user456": "password456",
+        "Sadeghi": "1234",
     }
 
     role = {
         'Pouya': Role.User,
+        'Sadeghi': Role.Specialist,
     }
 
     def __init__(self):

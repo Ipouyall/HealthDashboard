@@ -9,6 +9,13 @@ class ReportType(Enum):
     sessionEmotionChanging = auto()
 
 
+VALID_REPORTS = {
+    "Emotion Gauge": ReportType.emoGauge,
+    "Message Sentiment": ReportType.msgSentiment,
+    "Session Emotion Changing": ReportType.sessionEmotionChanging,
+}
+
+
 @dataclass()
 class Report:
     activeCharts: List[ReportType]

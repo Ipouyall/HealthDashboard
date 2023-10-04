@@ -1,7 +1,4 @@
-import enum
-
-
-class Role(enum.Enum):
+class Role:
     User = 'user'
-    Specialist = 'user2'
+    Specialist = 'Therapist'
     Analytic = 'assistant'
