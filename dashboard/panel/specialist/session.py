@@ -92,11 +92,11 @@ class Therapy:
         )
 
         self.show_chat(annotate_threshold=annotation_sensitivity[ann_ses])
+
         self.analytics(active_reports)
 
-        # TODO: add a section for control the annotation threshold
-
         # TODO: if session not ended, we need a section to end it
+        # we also need to add report section
 
     def activate(self):
         conv = st.sidebar.selectbox('Your Sessions', self.conversations)
