@@ -1,13 +1,9 @@
 from annotated_text import annotation
-from nltk.sentiment import SentimentIntensityAnalyzer
+from dashboard.plots import sia
 from nltk.tokenize import sent_tokenize
-import nltk
 from typing import Literal
+
 import streamlit as st
-
-nltk.download(["vader_lexicon", "punkt"])
-sia = SentimentIntensityAnalyzer()
-
 
 
 def annotate_md(*text, mode:Literal['word', 'sentence']):
