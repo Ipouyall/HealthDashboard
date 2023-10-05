@@ -155,3 +155,7 @@ class StageStorage(metaclass=Singleton):  # TODO: connect to a database
                     return conv
             elif conv.title is not None and conv.title == title:
                 return conv
+
+    def update_conversation(self, conv: Conversation):
+        id = conv.id
+        self.conversations[id-1] = conv

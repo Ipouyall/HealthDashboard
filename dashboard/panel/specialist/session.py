@@ -91,7 +91,7 @@ class Therapy:
         st.sidebar.markdown("### Tools")
 
         active_reports = st.sidebar.multiselect(
-            "Select analyzers",
+            "Select tools",
             VALID_REPORTS.keys(),
         )
 
@@ -113,16 +113,19 @@ class Therapy:
 
         useful_reports = st.sidebar.multiselect(
             "Select analyzers for report",
-            VALID_REPORTS.keys(),
+            list(VALID_REPORTS.keys()) + ["Notes",],
         )
 
         ph = st.sidebar.empty()
         end_session = ph.button("End Session")
+        notes = ""
+        if 'Notes' in useful_reports:
+            st.text_area("Specialist's notes:")
         if end_session:
-            notes = st.text_area("Specialist's notes:")
-            submit_end = ph.button("Submit note")
 
-            if submit_end:
+            # submit_end = ph.button("Submit note")
+
+            if True:
                 st.success("Report submitted and session ended successfully!")
 
                 self.conversation.report = Report(
@@ -130,7 +133,7 @@ class Therapy:
                     specialistsNote=notes,
                 )
 
-
+                self.need_sync = True
 
 
     def activate(self):
@@ -148,7 +151,10 @@ class Therapy:
 
         self.menu()
 
-
+        if self.need_sync and self.conversation is not None:
+            self.storage.update_conversation(self.conversation)
+            self.need_sync = False
+            st.experimental_rerun()
 
 
 
