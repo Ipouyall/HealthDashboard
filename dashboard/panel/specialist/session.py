@@ -17,9 +17,10 @@ from dashboard.plots.anotate import show_annotated
 
 annotation_sensitivity = {
     "Off": None,
-    "Low": 0.5,
-    "Medium": 0.35,
-    "High": 0.2,
+    "Low": 0.7,
+    "Medium": 0.5,
+    "High": 0.35,
+    "Extreme": 0.25,
 }
 
 
@@ -69,7 +70,13 @@ class Therapy:
         for idx in range(len(self.conversation.messages)):
             msg = self.conversation.messages[idx]()
             with st.chat_message(msg['role']):
-                st.markdown(msg['content'])
+                if msg['role'].lower() == 'user' and annotate_threshold is not None:
+                    show_annotated(
+                        text=msg['content'],
+                        threshold=annotate_threshold,
+                    )
+                else:
+                    st.markdown(msg['content'])
 
         # if command:
         #     with st.chat_message('assistant'):

@@ -1,14 +1,16 @@
 from annotated_text import annotation
+from nltk.sentiment import SentimentIntensityAnalyzer
+from nltk.tokenize import sent_tokenize
+import nltk
+from typing import Literal
+import streamlit as st
+
+nltk.download(["vader_lexicon", "punkt"])
+sia = SentimentIntensityAnalyzer()
 
 
-def show_annotated(text, model, ph): pass
-    # TODO: process text and prepare labels in here
 
-    # Example of using to print it
-    # ph.markdown(annotate_md(<the labeled text>), unsafe_allow_html=True)
-
-
-def annotate_md(*text):
+def annotate_md(*text, mode:Literal['word', 'sentence']):
     """
     Annotate text with colors
     :param text: if is a token like (txt, label) would be colored
@@ -16,11 +18,21 @@ def annotate_md(*text):
     :return: markdown string
     You should then feed result to st.markdown with unsafe_allow_html=True parameter
     """
-    BG_COLOR = {  # light red, light yellow, light green
-        'Angry': '#ffcccc',
-        'Sad': '#ffffcc',
-        'Happy': '#ccffcc',
-    }
+    if mode == 'word':
+        BG_COLOR = {  # light red, light yellow, light green
+            'Angry': '#ffcccc',
+            'Sad': '#ffffcc',
+            'Happy': '#ccffcc',
+        }
+    elif mode == 'sentence':
+        BG_COLOR = {  # light yellow, light green
+            'neg': '#ffffcc',
+            'pos': '#ccffcc',
+        }
+    else:
+        print(f"Unknown mode for annotation: {mode}")
+        raise Exception()
+
     comp_text = ""
     for t in text:
         if isinstance(t, tuple):
@@ -31,3 +43,23 @@ def annotate_md(*text):
             raise TypeError(f"Expected str or tuple, got {type(t)}")
         comp_text += " "
     return comp_text
+
+
+def show_annotated(text, threshold):
+    sentences_tok = sent_tokenize(text)
+    sentences = []
+    for sentence in sentences_tok:
+        scores = sia.polarity_scores(sentence)
+        if scores['neu'] > max(scores['neg'], scores['pos']):
+            sentences.append(sentence)
+        elif scores['neg'] > scores['pos'] and scores['neg'] >= threshold:
+            sentences.append(tuple([sentence, 'neg']))
+        elif scores['pos'] > scores['neg'] and scores['pos'] >= threshold:
+            sentences.append(tuple([sentence, 'pos']))
+        else:
+            sentences.append(sentence)
+
+    st.markdown(
+        annotate_md(*sentences, mode="sentence"),
+        unsafe_allow_html=True
+    )
