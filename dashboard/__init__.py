@@ -65,17 +65,16 @@ class Dashboard:
                 unsafe_allow_html=True,
             )
 
-        st.sidebar.divider()
-        panel.activate()
-
         if self.current_user[0] is not None:
-            st.sidebar.divider()
             logout_button = st.sidebar.button("Logout")
             if logout_button:
                 self.current_user = (None, None)
                 st.success("Logout Successfully!")
                 self.PANELS[0].logout()
                 st.experimental_rerun()
+
+        st.sidebar.divider()
+        panel.activate()
 
     def dump(self):
         pass

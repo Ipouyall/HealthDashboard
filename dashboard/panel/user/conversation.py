@@ -22,6 +22,7 @@ class Session:
         self.conversations = [None, ] + ['. '.join([str(conv[0]), conv[1]]) for conv in self.storage.get_conversations()]
         self.conversation: Union[Conversation, None] = None
         self.mood = MoodModel("./dashboard/model/depecheMood/DepecheMood_english_token_full.tsv")
+        self.need_sync = False
 
     def special(self, command):
         if command == 'emotion':
@@ -129,6 +130,7 @@ class Session:
                 command = prompt.lower()
             else:
                 self.conversation.messages.append(msg)
+                self.need_sync = True
 
         # Display chat messages from history on app rerun
         for idx in range(len(self.conversation.messages)):
@@ -164,3 +166,7 @@ class Session:
         st.header(f"{self.conversation.title}")
 
         self.chat_page()
+
+        if self.need_sync and self.conversation is not None:
+            self.storage.update_conversation(self.conversation)
+            self.need_sync = False
