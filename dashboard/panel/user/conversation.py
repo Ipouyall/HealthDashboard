@@ -19,7 +19,7 @@ class Session:
 
     def __init__(self):
         self.storage = StageStorage()
-        self.conversations = [None, ] + self.storage.get_conversations()
+        self.conversations = [None, ] + ['. '.join([str(conv[0]), conv[1]]) for conv in self.storage.get_conversations()]
         self.conversation: Union[Conversation, None] = None
         self.mood = MoodModel("./dashboard/model/depecheMood/DepecheMood_english_token_full.tsv")
 
@@ -154,7 +154,8 @@ class Session:
     def activate(self):
         conv = st.sidebar.selectbox('Active Session', self.conversations)
         if conv is not None and (self.conversation is None or self.conversation.id != conv[0]):
-            self.conversation = self.storage.get_conversation(id=conv[0])
+            conv_id = int(conv[:conv.find('. ')])
+            self.conversation = self.storage.get_conversation(id=conv_id)
         elif conv is None:
             self.conversation = None
             st.markdown("Please select a conversation to activate!")

@@ -29,9 +29,10 @@ class Therapy:
 
     def __init__(self):
         self.storage = StageStorage()
-        self.conversations = [None, ] + self.storage.get_conversations()
+        self.conversations = [None, ] + ['. '.join([str(conv[0]), conv[1]]) for conv in self.storage.get_conversations()]
         self.conversation: Union[Conversation, None] = None
         self.mood = MoodModel("./dashboard/model/depecheMood/DepecheMood_english_token_full.tsv")
+        self.need_sync = False
 
     def special(self, command):
         pass
@@ -66,6 +67,7 @@ class Therapy:
                 command = prompt.lower()
             else:
                 self.conversation.messages.append(msg)
+                self.need_sync = True
 
         for idx in range(len(self.conversation.messages)):
             msg = self.conversation.messages[idx]()
@@ -102,13 +104,40 @@ class Therapy:
 
         self.analytics(active_reports)
 
-        # TODO: if session not ended, we need a section to end it
-        # we also need to add report section
+        ###### Report section ######
+        if self.conversation.report is not None:
+            return
+
+        st.sidebar.divider()
+        st.sidebar.markdown("### Report")
+
+        useful_reports = st.sidebar.multiselect(
+            "Select analyzers for report",
+            VALID_REPORTS.keys(),
+        )
+
+        ph = st.sidebar.empty()
+        end_session = ph.button("End Session")
+        if end_session:
+            notes = st.text_area("Specialist's notes:")
+            submit_end = ph.button("Submit note")
+
+            if submit_end:
+                st.success("Report submitted and session ended successfully!")
+
+                self.conversation.report = Report(
+                    activeCharts=[VALID_REPORTS[chart] for chart in useful_reports],
+                    specialistsNote=notes,
+                )
+
+
+
 
     def activate(self):
         conv = st.sidebar.selectbox('Your Sessions', self.conversations)
         if conv is not None and (self.conversation is None or self.conversation.id != conv[0]):
-            self.conversation = self.storage.get_conversation(id=conv[0])
+            conv_id = int(conv[:conv.find('. ')])
+            self.conversation = self.storage.get_conversation(id=conv_id)
         elif conv is None:
             self.conversation = None
             st.markdown("Please select a conversation to activate!")

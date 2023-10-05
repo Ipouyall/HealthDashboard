@@ -15,7 +15,7 @@ class StageStorage(metaclass=Singleton):  # TODO: connect to a database
     def __init__(self):
         self.conversations = [
             Conversation(
-                id=0,
+                id=1,
                 title="Conversation 1",
                 messages=[
                     Message(
@@ -33,7 +33,7 @@ class StageStorage(metaclass=Singleton):  # TODO: connect to a database
                 ],
             ),
             Conversation(
-                id=1,
+                id=2,
                 title="Conversation 2",
                 messages=[
                     Message(
@@ -135,7 +135,7 @@ class StageStorage(metaclass=Singleton):  # TODO: connect to a database
                         content="I'm feeling more hopeful already. Let's start working on that plan!")
                 ],
                 report=Report(
-                    activeCharts=[ReportType.emoGauge, ReportType.msgSentiment],
+                    activeCharts=[ReportType.emoGauge, ReportType.sessionSentimentChanging],
                     specialistsNote="This is a sample note from the specialist",
                 ),
             ),
@@ -150,6 +150,7 @@ class StageStorage(metaclass=Singleton):  # TODO: connect to a database
     def get_conversation(self, title=None, id=None):
         for conv in self.conversations:
             if id is not None:
+                id = int(id)
                 if conv.id == id:
                     return conv
             elif conv.title is not None and conv.title == title:
