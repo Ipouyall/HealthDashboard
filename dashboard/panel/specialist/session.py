@@ -12,6 +12,7 @@ from dashboard.storage.report import Report, VALID_REPORTS, ReportType
 from dashboard.storage.report import Report, ReportType
 from dashboard.model.mood import MoodModel
 from dashboard.plots.gauge import emotion_gauge
+from dashboard.plots.wordcloud import WordCould
 from dashboard.plots.anotate import show_annotated
 
 
@@ -44,6 +45,13 @@ class Therapy:
             emotion_gauge(
                 text=' '.join(msg.content for msg in self.conversation.messages if msg.role == Role.User),
                 model=self.mood,
+                ph=row1[row1_idx],
+            )
+            row1_idx += 1
+
+        if "Word Cloud" in active_tools:
+            WordCould(
+                text=". ".join(msg.content for msg in self.conversation.messages if msg.role == Role.User),
                 ph=row1[row1_idx],
             )
             row1_idx += 1
@@ -113,7 +121,7 @@ class Therapy:
 
         useful_reports = st.sidebar.multiselect(
             "Select analyzers for report",
-            list(VALID_REPORTS.keys()) + ["Notes",],
+            list(VALID_REPORTS.keys()) + ["Notes"],
         )
 
         ph = st.sidebar.empty()
@@ -134,7 +142,6 @@ class Therapy:
                 )
 
                 self.need_sync = True
-
 
     def activate(self):
         conv = st.sidebar.selectbox('Your Sessions', self.conversations)
