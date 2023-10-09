@@ -41,20 +41,21 @@ class Therapy:
     def analytics(self, active_tools):
         row1 = st.columns(2)
         row1_idx = 0
-        if "Emotion Gauge" in active_tools:
-            emotion_gauge(
-                text=' '.join(msg.content for msg in self.conversation.messages if msg.role == Role.User),
-                model=self.mood,
-                ph=row1[row1_idx],
-            )
-            row1_idx += 1
+        for tool in active_tools:
+            if "Emotion Gauge" == tool:
+                emotion_gauge(
+                    text=' '.join(msg.content for msg in self.conversation.messages if msg.role == Role.User),
+                    model=self.mood,
+                    ph=row1[row1_idx],
+                )
+                row1_idx += 1
 
-        if "Word Cloud" in active_tools:
-            WordCould(
-                text=". ".join(msg.content for msg in self.conversation.messages if msg.role == Role.User),
-                ph=row1[row1_idx],
-            )
-            row1_idx += 1
+            elif "Word Cloud" == tool:
+                WordCould(
+                    text=". ".join(msg.content for msg in self.conversation.messages if msg.role == Role.User),
+                    ph=row1[row1_idx],
+                )
+                row1_idx += 1
 
         # TODO: Implement emotion changing
 
