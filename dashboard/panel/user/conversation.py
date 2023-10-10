@@ -11,6 +11,7 @@ from dashboard.storage.conversation import Conversation, Message
 from dashboard.storage.report import Report, ReportType
 from dashboard.model.mood import MoodModel
 from dashboard.plots.gauge import emotion_gauge
+from dashboard.plots.wordcloud import WordCould
 
 
 class Session:
@@ -105,6 +106,14 @@ class Session:
                 model=self.mood,
                 ph=row[idx],
             )
+            idx += 1
+
+        if ReportType.WordCloud in report.activeCharts:
+            WordCould(
+                text=". ".join(msg.content for msg in self.conversation.messages if msg.role == Role.User),
+                ph=row[idx],
+            )
+            idx += 1
 
         ### Place holder for seccond chart ###
 

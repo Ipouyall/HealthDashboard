@@ -129,7 +129,7 @@ class Therapy:
         end_session = ph.button("End Session")
         notes = ""
         if 'Notes' in useful_reports:
-            st.text_area("Specialist's notes:")
+            notes = st.text_area("Specialist's notes:")
         if end_session:
 
             # submit_end = ph.button("Submit note")
@@ -138,7 +138,7 @@ class Therapy:
                 st.success("Report submitted and session ended successfully!")
 
                 self.conversation.report = Report(
-                    activeCharts=[VALID_REPORTS[chart] for chart in useful_reports],
+                    activeCharts=[VALID_REPORTS[chart] for chart in useful_reports if chart in VALID_REPORTS],
                     specialistsNote=notes,
                 )
 
